@@ -37,3 +37,11 @@ MAFFT does multiple sequence alignment by first building a progressive alignment
 - Low-depth positions are masked as `N`, which means some information is missing.
 - Influenza can reassort segments, so interpretation across segments can be more complicated.
 - Any within-sample variation (or mixed infection) is simplified into one consensus sequence.
+
+## Feb 27, 2026 — Distance and Parsimony HW
+
+Used the M segment alignment (`results/msa/M.aln.fa`). Built two trees in R using `ape` and `phangorn`. Script: `scripts/distance_parsimony.R`. Output trees in `results/trees/`.
+
+**Neighbor Joining:** computes pairwise distances with TN93 model, then builds a tree by joining the closest pair iteratively. Assumes distances are additive. Limitation: heuristic, not guaranteed optimal.
+
+**Parsimony:** finds the tree requiring the fewest mutations. No substitution model needed. Limitation: prone to long-branch attraction; heuristic search can get stuck locally.
