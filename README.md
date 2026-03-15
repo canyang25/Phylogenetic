@@ -8,5 +8,3 @@ Bioinformatics coursework repo for selecting sequencing data, running QC, and do
 - `results/` — figures/tables to keep
 - `scripts/` — optional helper scripts
 - `data/metadata/` — accession lists / sample sheets
-- `data/raw/` — raw reads (not pushed)
-- `data/qc/` — QC outputs (not pushed)
