@@ -45,3 +45,47 @@ Used the M segment alignment (`results/msa/M.aln.fa`). Built two trees in R usin
 **Neighbor Joining:** computes pairwise distances with TN93 model, then builds a tree by joining the closest pair iteratively. Assumes distances are additive. Limitation: heuristic, not guaranteed optimal.
 
 **Parsimony:** finds the tree requiring the fewest mutations. No substitution model needed. Limitation: prone to long-branch attraction; heuristic search can get stuck locally.
+
+## Mar 14, 2026 — Maximum Likelihood HW with IQ-TREE
+
+I chose **IQ-TREE** as my maximum likelihood method. I used the same M segment alignment (`results/msa/M.aln.fa`) so I can compare the ML tree to my earlier neighbor joining and parsimony trees.
+
+## Why This Method
+- IQ-TREE is a maximum likelihood phylogeny program.
+- It can test substitution models automatically with `-m MFP`.
+- It is commonly used and has a simple command line workflow.
+
+## Algorithm Description
+IQ-TREE searches for the tree that gives the highest likelihood for the aligned sequences under a chosen substitution model. It uses heuristic tree search, and it can also estimate branch support with ultrafast bootstrap and SH-aLRT.
+
+## Assumptions
+- The sequences in the alignment are homologous.
+- The M segment alignment is correct enough for tree inference.
+- The chosen substitution model is a reasonable fit for the data.
+- One tree can represent the history of this segment.
+
+## Limitations
+- Maximum likelihood is still model-based, so a poor model can affect the tree.
+- My sequences are consensus sequences from reference-guided mapping, so some reference bias is possible.
+- Low-depth sites were masked with `N`, so some information is missing.
+- Influenza can reassort between segments, so one segment tree does not always represent the whole virus history.
+
+Commands I used:
+
+```bash
+conda env update -f envs/phylo-msa.yml
+bash scripts/run_iqtree.sh
+```
+
+Main IQ-TREE command:
+
+```bash
+iqtree2 \
+  -s results/msa/M.aln.fa \
+  -m MFP \
+  -B 1000 \
+  --bnni \
+  -alrt 1000 \
+  -nt AUTO \
+  --prefix results/trees/iqtree/M
+```
