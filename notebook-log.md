@@ -89,3 +89,55 @@ iqtree2 \
   -nt AUTO \
   --prefix results/trees/iqtree/M
 ```
+
+## Apr 4, 2026 — Bayesian HW with MrBayes
+
+I used **MrBayes** on the same M segment alignment (`results/msa/M.aln.fa`) so I could compare the Bayesian result to my earlier trees.
+
+## Why This Method
+- MrBayes uses Bayesian inference instead of choosing only one best tree.
+- It gives posterior probabilities for clades.
+- It is a common program for Bayesian phylogenetics and has a simple command-line workflow.
+
+## Algorithm Description
+MrBayes uses Markov chain Monte Carlo (MCMC) to sample trees and model parameters from the posterior distribution. Instead of returning only one tree from a direct search, it explores many possible trees and estimates support from how often clades appear in the samples.
+
+## Assumptions
+- The M segment alignment is homologous and good enough for tree inference.
+- The substitution model is a reasonable fit for the data.
+- The MCMC chains run long enough to approach convergence.
+- One segment can be represented by one tree.
+
+## Limitations
+- Results depend on the model and priors that were chosen.
+- If the chains do not converge well, posterior probabilities can be misleading.
+- My sequences are consensus sequences from reference-guided mapping, so some reference bias is possible.
+- Low-depth positions were masked with `N`, so some sites have missing information.
+- Influenza can reassort between segments, so one segment tree may not represent the history of the whole virus.
+
+Commands I used:
+
+```bash
+conda env update -f envs/phylo-msa.yml
+bash scripts/run_mrbayes.sh
+```
+
+Main steps:
+
+```bash
+Rscript scripts/make_mrbayes_input.R
+mb results/trees/mrbayes/M.nex
+```
+
+MrBayes block used:
+
+```nexus
+BEGIN MRBAYES;
+  set autoclose=yes nowarn=yes;
+  lset nst=6 rates=gamma;
+  prset statefreqpr=dirichlet(1,1,1,1);
+  mcmc ngen=100000 samplefreq=100 printfreq=100 diagnfreq=1000 nchains=4 nruns=2 savebrlens=yes filename=results/trees/mrbayes/M;
+  sump burnin=250;
+  sumt burnin=250;
+END;
+```
