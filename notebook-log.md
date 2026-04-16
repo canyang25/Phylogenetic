@@ -141,3 +141,15 @@ BEGIN MRBAYES;
   sumt burnin=250;
 END;
 ```
+
+## Apr 16, 2026 — Coalescent HW with ASTRAL-IV
+
+I used **ASTRAL-IV** on my influenza segments (`PB2 PB1 PA HA NP NA M NS`).
+It is a good fit for my dataset because I have multiple markers, so I can build one tree per segment and then summarize them with a coalescent method.
+
+Commands I used:
+
+```bash
+conda env update -f envs/phylo-msa.yml
+bash scripts/run_astral_coalescent.sh
+```
